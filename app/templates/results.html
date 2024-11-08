@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Similarity Results</title>
+    <style>
+        /* Reset some default styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* Background Setup */
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #1a1a1a, #000000); /* Dark gradient background */
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            padding: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Animated Background Effect */
+        .background-animation {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .circle {
+            position: absolute;
+            border-radius: 50%;
+            opacity: 0.4;
+            animation: float 8s infinite ease-in-out;
+            filter: blur(10px);
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.2); /* Soft glow effect */
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-15px);
+            }
+            100% {
+                transform: translateY(0);
+            }
+        }
+
+        /* Main container for the content */
+        .container {
+            background-color: rgba(0, 0, 0, 0.85);
+            border-radius: 10px;
+            padding: 40px;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.7);
+            width: 80%;
+            max-width: 800px;
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            gap: 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Left side: Similarity Score */
+        .score-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .score-container h1 {
+            font-size: 2em;
+            color: #e74c3c;
+            margin-bottom: 10px;
+            text-shadow: 3px 3px 5px rgba(0, 0, 0, 0.5);
+        }
+
+        .score-container meter {
+            width: 100%;
+            height: 30px;
+            margin: 10px 0;
+        }
+
+        .score-container p {
+            font-size: 1.2em;
+            margin-top: 10px;
+        }
+
+        /* Right side: Suggestions */
+        .suggestions-container {
+            flex: 2;
+        }
+
+        .suggestions-container h2 {
+            color: #3498db;
+            font-size: 1.5em;
+            margin-bottom: 15px;
+        }
+
+        .suggestions-container p {
+            font-size: 1.1em;
+            color: #ffffff;
+            line-height: 1.5em;
+        }
+
+        /* Button styling */
+        a {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 12px 20px;
+            background-color: #e74c3c;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            border: 2px solid #d35400;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+
+        a:hover {
+            background-color: #c0392b;
+            border-color: #e74c3c;
+            transform: scale(1.05);
+        }
+
+        /* Responsive design */
+        @media (max-width: 600px) {
+            .container {
+                flex-direction: column;
+            }
+
+            .score-container, .suggestions-container {
+                align-items: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Background circles for the animation -->
+    <div class="background-animation">
+        <div class="circle" style="width: 80px; height: 80px; background: rgba(39, 174, 96, 0.8); top: 15%; left: 5%; animation-delay: 0s;"></div>
+        <div class="circle" style="width: 120px; height: 120px; background: rgba(52, 152, 219, 0.8); top: 60%; left: 75%; animation-delay: 2s;"></div>
+        <div class="circle" style="width: 100px; height: 100px; background: rgba(255, 87, 34, 0.8); top: 35%; left: 40%; animation-delay: 4s;"></div>
+    </div>
+
+    <div class="container">
+        <!-- Similarity Score Section -->
+        <div class="score-container">
+            <h1>Similarity Results</h1>
+            <meter value="{{ score }}" min="0" max="100" optimum="80" low="50" high="70"></meter>
+            <p>{{ score }}%</p>
+            <a href="/">Go Back</a>
+        </div>
+
+        <!-- Suggestions Section -->
+        <div class="suggestions-container">
+            <h2>Missing keywords</h2>
+            {% if missing_keywords %}
+                <p>{{ missing_keywords | join(', ') }}</p>
+            {% else %}
+                <p>No missing keywords. Your resume aligns well with the job description!</p>
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html>

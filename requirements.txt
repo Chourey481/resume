@@ -1,0 +1,5 @@
+Flask
+pdfplumber
+scikit-learn
+nltk
+sentence-transformers
