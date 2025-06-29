@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request, jsonify
-from models.sbert_model import get_sbert_similarity
-from utils.file_handler import extract_text_from_pdf
-from utils.similarity import calculate_similarity, generate_suggestions
+from app.models.sbert_model import get_sbert_similarity
+from app.utils.file_handler import extract_text_from_pdf
+from app.utils.similarity import calculate_similarity, generate_suggestions
 import PyPDF2
 import spacy
 import os
@@ -117,4 +117,5 @@ def results():
     )
 
 if __name__ == '__main__':
-    app.run(debug=True, use_reloader=False)
+    port = int(os.environ.get('PORT', 10000))
+    app.run(host='0.0.0.0', port=port, debug=True, use_reloader=False)

@@ -2,8 +2,25 @@
 __pycache__/
 *.py[cod]
 *$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
 
-# Environment
+# Virtual Environment
 .env
 .venv
 env/
@@ -11,9 +28,24 @@ venv/
 ENV/
 
 # IDE
-.vscode/
 .idea/
+.vscode/
+*.swp
+*.swo
 
-# Misc
+# Logs
 *.log
+
+# Local development
+instance/
+.webassets-cache
+
+# Docker
+.docker/
+
+# Spacy models
+en_core_web_sm/
+
+# System Files
 .DS_Store
+Thumbs.db
