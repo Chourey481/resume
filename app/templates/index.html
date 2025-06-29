@@ -3,8 +3,10 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Resume Matcher</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resume Matcher - AI-Powered Job Match Analysis</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
     <div class="background-animation">
@@ -14,20 +16,57 @@
     </div>
 
     <div class="container">
-        <h1>Resume Matcher</h1>
-        <form action="{{ url_for('results') }}" method="POST" enctype="multipart/form-data">
-            <label for="resume">Upload Resume (PDF):</label>
-            <input type="file" name="resume" accept=".pdf" required>
-            
-            <label for="job_description">Job Description:</label>
-            <textarea name="job_description" rows="5" required></textarea>
-            
-            <button type="submit">Check Match</button>
-        </form>
+        <div class="header">
+            <h1>Resume Matcher</h1>
+            <p class="subtitle">AI-Powered Job Match Analysis</p>
+        </div>
 
-        {% if error %}
-            <p style="color:red;">{{ error }}</p>
-        {% endif %}
+        <div class="card">
+            <form action="{{ url_for('results') }}" method="POST" enctype="multipart/form-data" class="upload-form">
+                <div class="form-group">
+                    <div class="file-upload">
+                        <label for="resume" class="file-label">
+                            <svg class="upload-icon" viewBox="0 0 24 24">
+                                <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
+                            </svg>
+                            <span>Upload Resume (PDF)</span>
+                        </label>
+                        <input type="file" id="resume" name="resume" accept=".pdf" required class="file-input">
+                        <p class="file-name"></p>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="job_description" class="input-label">Job Description</label>
+                    <textarea id="job_description" name="job_description" rows="8" required 
+                              placeholder="Paste the job description here..."></textarea>
+                </div>
+
+                <button type="submit" class="submit-btn">
+                    <span>Analyze Match</span>
+                    <svg class="arrow-icon" viewBox="0 0 24 24">
+                        <path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/>
+                    </svg>
+                </button>
+            </form>
+
+            {% if error %}
+            <div class="error-message">
+                <svg class="error-icon" viewBox="0 0 24 24">
+                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/>
+                </svg>
+                <p>{{ error }}</p>
+            </div>
+            {% endif %}
+        </div>
     </div>
+
+    <script>
+        // Display selected file name
+        document.getElementById('resume').addEventListener('change', function(e) {
+            const fileName = e.target.files[0]?.name || 'No file selected';
+            document.querySelector('.file-name').textContent = fileName;
+        });
+    </script>
 </body>
 </html>

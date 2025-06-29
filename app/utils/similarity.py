@@ -1,6 +1,6 @@
 # app/utils/similarity.py
 from .text_processing import preprocess_text
-from ..models.sbert_model import get_sbert_similarity
+from models.sbert_model import get_sbert_similarity
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 

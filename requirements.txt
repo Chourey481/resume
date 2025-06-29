@@ -1,5 +1,10 @@
-Flask
-pdfplumber
-scikit-learn
-nltk
-sentence-transformers
+flask==3.0.0
+sentence-transformers==2.5.1
+PyPDF2==3.0.1
+spacy==3.7.2
+python-dotenv==1.0.0
+groq==0.4.2
+
+# Download spaCy English language model
+# After installing requirements, run:
+# python -m spacy download en_core_web_sm

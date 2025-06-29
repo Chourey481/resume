@@ -2,151 +2,78 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Similarity Results</title>
-    <style>
-        /* Reset some default styles */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resume Analysis Results</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="background-animation">
+        <div class="circle"></div>
+        <div class="circle"></div>
+        <div class="circle"></div>
+    </div>
 
-        /* Background Setup */
-        body {
-            font-family: 'Arial', sans-serif;
-            background: linear-gradient(135deg, #1a1a1a, #000000); /* Dark gradient background */
-            color: white;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            padding: 20px;
-            position: relative;
-            overflow: hidden;
-        }
+    <div class="container results-container">
+        <div class="header">
+            <h1>Analysis Results</h1>
+            <p class="subtitle">AI-Powered Resume Match Analysis</p>
+        </div>
 
-        /* Animated Background Effect */
-        .background-animation {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 0;
-        }
+        <div class="results-grid">
+            <!-- Match Score Card -->
+            <div class="result-card score-card">
+                <h2>Match Score</h2>
+                <div class="score-circle">
+                    <svg class="progress-ring" width="120" height="120">
+                        <circle class="progress-ring-circle-bg" cx="60" cy="60" r="54" />
+                        <circle class="progress-ring-circle" cx="60" cy="60" r="54" />
+                    </svg>
+                    <div class="score-text">
+                        <span class="score-number">{{ score }}</span>
+                        <span class="score-percent">%</span>
+                    </div>
+                </div>
+            </div>
 
-        .circle {
-            position: absolute;
-            border-radius: 50%;
-            opacity: 0.4;
-            animation: float 8s infinite ease-in-out;
-            filter: blur(10px);
-            box-shadow: 0 0 20px rgba(255, 255, 255, 0.2); /* Soft glow effect */
-        }
+            <!-- Matching Keywords Card -->
+            <div class="result-card keywords-card">
+                <h2>Matching Keywords</h2>
+                <div class="keywords-container">
+                    {% for keyword in matching_keywords %}
+                    <span class="keyword-tag match">{{ keyword }}</span>
+                    {% endfor %}
+                </div>
+            </div>
 
-        @keyframes float {
-            0% {
-                transform: translateY(0);
-            }
-            50% {
-                transform: translateY(-15px);
-            }
-            100% {
-                transform: translateY(0);
-            }
-        }
+            <!-- Missing Keywords Card -->
+            <div class="result-card keywords-card">
+                <h2>Missing Keywords</h2>
+                <div class="keywords-container">
+                    {% for keyword in missing_keywords %}
+                    <span class="keyword-tag missing">{{ keyword }}</span>
+                    {% endfor %}
+                </div>
+            </div>
 
-        /* Main container for the content */
-        .container {
-            background-color: rgba(0, 0, 0, 0.85);
-            border-radius: 10px;
-            padding: 40px;
-            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.7);
-            width: 80%;
-            max-width: 800px;
-            display: flex;
-            flex-direction: row;
-            justify-content: space-between;
-            gap: 20px;
-            position: relative;
-            z-index: 1;
-        }
+            <!-- AI Analysis Card -->
+            <div class="result-card analysis-card">
+                <h2>AI Recommendations</h2>
+                <div class="analysis-content">
+                    {{ ai_analysis | safe }}
+                </div>
+            </div>
+        </div>
 
-        /* Left side: Similarity Score */
-        .score-container {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-        }
+        <div class="actions">
+            <a href="{{ url_for('index') }}" class="button secondary">
+                <svg class="button-icon" viewBox="0 0 24 24">
+                    <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/>
+                </svg>
+                <span>Try Another Resume</span>
+            </a>
+        </div>
 
-        .score-container h1 {
-            font-size: 2em;
-            color: #e74c3c;
-            margin-bottom: 10px;
-            text-shadow: 3px 3px 5px rgba(0, 0, 0, 0.5);
-        }
-
-        .score-container meter {
-            width: 100%;
-            height: 30px;
-            margin: 10px 0;
-        }
-
-        .score-container p {
-            font-size: 1.2em;
-            margin-top: 10px;
-        }
-
-        /* Right side: Suggestions */
-        .suggestions-container {
-            flex: 2;
-        }
-
-        .suggestions-container h2 {
-            color: #3498db;
-            font-size: 1.5em;
-            margin-bottom: 15px;
-        }
-
-        .suggestions-container p {
-            font-size: 1.1em;
-            color: #ffffff;
-            line-height: 1.5em;
-        }
-
-        /* Button styling */
-        a {
-            display: inline-block;
-            margin-top: 20px;
-            padding: 12px 20px;
-            background-color: #e74c3c;
-            color: white;
-            text-decoration: none;
-            border-radius: 5px;
-            border: 2px solid #d35400;
-            transition: background-color 0.3s ease, transform 0.2s ease;
-        }
-
-        a:hover {
-            background-color: #c0392b;
-            border-color: #e74c3c;
-            transform: scale(1.05);
-        }
-
-        /* Responsive design */
-        @media (max-width: 600px) {
-            .container {
-                flex-direction: column;
-            }
-
-            .score-container, .suggestions-container {
-                align-items: center;
-            }
-        }
-    </style>
 </head>
 <body>
     <!-- Background circles for the animation -->
@@ -156,24 +83,46 @@
         <div class="circle" style="width: 100px; height: 100px; background: rgba(255, 87, 34, 0.8); top: 35%; left: 40%; animation-delay: 4s;"></div>
     </div>
 
-    <div class="container">
-        <!-- Similarity Score Section -->
-        <div class="score-container">
-            <h1>Similarity Results</h1>
-            <meter value="{{ score }}" min="0" max="100" optimum="80" low="50" high="70"></meter>
-            <p>{{ score }}%</p>
-            <a href="/">Go Back</a>
-        </div>
 
-        <!-- Suggestions Section -->
-        <div class="suggestions-container">
-            <h2>Missing keywords</h2>
-            {% if missing_keywords %}
-                <p>{{ missing_keywords | join(', ') }}</p>
-            {% else %}
-                <p>No missing keywords. Your resume aligns well with the job description!</p>
-            {% endif %}
+            </div>
         </div>
     </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Animate score on load
+            const score = {{ score }};
+            const circle = document.querySelector('.progress-ring-circle');
+            const radius = circle.r.baseVal.value;
+            const circumference = radius * 2 * Math.PI;
+            
+            circle.style.strokeDasharray = `${circumference} ${circumference}`;
+            circle.style.strokeDashoffset = circumference;
+            
+            function setProgress(percent) {
+                const offset = circumference - (percent / 100 * circumference);
+                circle.style.strokeDashoffset = offset;
+            }
+            
+            // Animate the progress
+            setTimeout(() => {
+                setProgress(score);
+            }, 100);
+
+            // Format AI analysis content
+            const analysisContent = document.querySelector('.analysis-content');
+            if (analysisContent) {
+                const formattedContent = analysisContent.innerHTML
+                    .replace(/•/g, '<span class="bullet">•</span>')
+                    .split('\n')
+                    .filter(line => line.trim())
+                    .map(line => `<p>${line.trim()}</p>`)
+                    .join('');
+                analysisContent.innerHTML = formattedContent;
+            }
+        });
+    </script>
+</body>
+</html>
 </body>
 </html>

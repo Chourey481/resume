@@ -1,9 +1,16 @@
 # app/utils/file_handler.py
-import pdfplumber
+from PyPDF2 import PdfReader
 
 def extract_text_from_pdf(pdf_file):
+    """
+    Extract text content from a PDF file using PyPDF2.
+    Args:
+        pdf_file: File object of the uploaded PDF
+    Returns:
+        str: Extracted text from the PDF
+    """
     text = ""
-    with pdfplumber.open(pdf_file) as pdf:
-        for page in pdf.pages:
-            text += page.extract_text()
-    return text
+    reader = PdfReader(pdf_file)
+    for page in reader.pages:
+        text += page.extract_text() + "\n"
+    return text.strip()
